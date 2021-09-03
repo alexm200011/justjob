@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "831293252335",
+    "project_id": "justjob-931d1",
+    "storage_bucket": "justjob-931d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831293252335:android:466d896ee649c036ebb11a",
+        "android_client_info": {
+          "package_name": "com.justjob.justjob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831293252335-v760uerf6n8emsoq8sjftc6pg3tm142d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWHH98qfIlClO9SWnRnEnW8IBKQ_mEGEA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831293252335-v760uerf6n8emsoq8sjftc6pg3tm142d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "831293252335-56ralkbkue8v8mdnqm3u7jqrvch88cnc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.justjob.justjob"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
