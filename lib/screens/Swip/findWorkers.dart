@@ -1,5 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:justjob/shared/constants.dart';
+
+import '../../main.dart';
 
 class FindWorkers extends StatefulWidget {
   //const FindWorkers({Key? key}) : super(key: key);
@@ -23,6 +28,105 @@ class _FindWorkersState extends State<FindWorkers> {
       "mujer2.jpg",
       "mujer3.jpeg",
   ];
+
+  @override
+  void initState(){
+    super.initState();
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    FirebaseMessaging.onMessage.listen((RemoteMessage message){
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if(notification!= null && android != null){
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+              android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  channel.description,
+                  color: Colors.blue,
+                  playSound: true,
+                  icon: initializationSettingsAndroid.defaultIcon
+
+              )
+          ),
+        );
+      }
+    });
+
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message){
+      print("Un nuevo onMessageOpenedApp ha sido publicado");
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if(notification!= null && android != null){
+        showDialog(
+            context: context,
+            builder:(_){
+              return AlertDialog(
+                title: Text(notification.title!),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(notification.body!)
+                    ],
+                  ),
+                ),
+
+              );
+            });
+      }
+    });
+
+  }
+
+  void showNotification(){
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    flutterLocalNotificationsPlugin.show(
+        0,
+        'Te han Aceptado!!',
+        'EL contratante ha aceptado tu Hoja de Vida felicidades',
+        NotificationDetails(
+            android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channel.description,
+                importance: Importance.high,
+                color: Colors.blue,
+                playSound: true,
+                icon: initializationSettingsAndroid.defaultIcon
+
+            )
+        )
+    );
+  }
+
+  void showNotification2(){
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    flutterLocalNotificationsPlugin.show(
+        1,
+        'Sigue intentandolo!!',
+        'El puesto vacante ha sido ocupado, no te preocupes aún hay mas ofertas para ti',
+        NotificationDetails(
+            android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channel.description,
+                importance: Importance.high,
+                color: Colors.blue,
+                playSound: true,
+                icon: initializationSettingsAndroid.defaultIcon
+            )
+        )
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +196,7 @@ class _FindWorkersState extends State<FindWorkers> {
                             duration: Duration(milliseconds: 400),
                           )
                       );
+                     showNotification2();
                     }else if (orientation == CardSwipeOrientation.RIGHT){
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -99,6 +204,7 @@ class _FindWorkersState extends State<FindWorkers> {
                             duration: Duration(milliseconds: 400),
                           )
                       );
+                      showNotification();
                     }
                   },
                 ),

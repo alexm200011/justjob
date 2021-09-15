@@ -7,6 +7,7 @@ class DatabaseService{
   final String? uid;
   DatabaseService({ this.uid });
   String? deseo;
+  MTrabajador? mTrabajador;
   // collection reference
 
   final CollectionReference justJobCollection = FirebaseFirestore.instance.collection('justJobs');
@@ -34,6 +35,19 @@ class DatabaseService{
     });
     return deseo;
   }
+
+  Future getTrabajadorData() async {
+    await justJobCollection.doc(uid).get().then((doc) => {
+      mTrabajador!.nombre = doc['nombre'].toString(),
+      mTrabajador!.cedula = doc['cedula'].toString(),
+      mTrabajador!.direccion = doc['direccion'].toString(),
+      mTrabajador!.telefono = doc['telefono'].toString(),
+      mTrabajador!.niv_educacion = doc['niv_educacion'].toString(),
+      mTrabajador!.titulo = doc['titulo'].toString(),
+    });
+    return mTrabajador;
+  }
+
 
   //justjob list from snapshot
   List<JustJob>? _justJobListFromSnapshot(QuerySnapshot snapshot){
@@ -78,6 +92,7 @@ class DatabaseService{
     );
   }
 
+
   MEmpleos? _empleosFromSnapshot(DocumentSnapshot snapshot){
     return MEmpleos(
         uid: uid!,
@@ -87,6 +102,13 @@ class DatabaseService{
     );
   }
 
+  MCalificaciones? _calificacionesFromSnapShot(DocumentSnapshot snapshot){
+    return MCalificaciones(
+        uid: uid!,
+        calificacion: snapshot['calificacion'],
+        comentario: snapshot['comentario']
+    );
+  }
 
 
   //get justjobs streams
@@ -109,4 +131,7 @@ class DatabaseService{
     return justJobCollection.doc(uid).snapshots().map(_empleosFromSnapshot);
   }
 
+  Stream<MCalificaciones?> get calificaciones{
+    return justJobCollection.doc(uid).snapshots().map(_calificacionesFromSnapShot);
+  }
 }

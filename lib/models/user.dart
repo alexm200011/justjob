@@ -24,12 +24,12 @@ class MUserData{
 class MTrabajador {
 
   final String uid;
-  final String? nombre;
-  final String? cedula;
-  final String? direccion;
-  final String? telefono;
-  final String? niv_educacion;
-  final String? titulo;
+  late final String? nombre;
+  late final String? cedula;
+  late final String? direccion;
+  late final String? telefono;
+  late final String? niv_educacion;
+  late final String? titulo;
 
   MTrabajador({required this.uid, this.nombre, this.cedula, this.direccion, this.telefono, this.niv_educacion, this.titulo});
 
@@ -45,4 +45,12 @@ class MEmpleos {
 
   MEmpleos({required this.uid, this.nombre, this.descripcion, this.imagen});
 
+}
+
+class MCalificaciones {
+  final String uid;
+  final double? calificacion;
+  final String? comentario;
+
+  MCalificaciones({required this.uid, this.calificacion, this.comentario});
 }

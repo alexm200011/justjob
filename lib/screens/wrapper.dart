@@ -6,6 +6,8 @@ import 'package:justjob/screens/authenticate/authenticate.dart';
 import 'package:justjob/screens/home/home.dart';
 import 'package:provider/provider.dart';
 
+import 'home/notifications.dart';
+
 class Wrapper extends StatelessWidget {
   //const Wrapper({Key? key}) : super(key: key);
 

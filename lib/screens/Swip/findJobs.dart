@@ -1,7 +1,12 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:justjob/models/user.dart';
+import 'package:justjob/shared/constants.dart';
+import 'package:provider/provider.dart';
 
-
+import '../../main.dart';
 
 
 
@@ -23,9 +28,88 @@ class _FinJobdsState extends State<FinJobds> {
     "Oferta2.png",
   ];
 
+  @override
+  void initState(){
+    super.initState();
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    FirebaseMessaging.onMessage.listen((RemoteMessage message){
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if(notification!= null && android != null){
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+              android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  channel.description,
+                  color: Colors.blue,
+                  playSound: true,
+                  icon: initializationSettingsAndroid.defaultIcon
+
+              )
+          ),
+        );
+      }
+    });
+
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message){
+      print("Un nuevo onMessageOpenedApp ha sido publicado");
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if(notification!= null && android != null){
+        showDialog(
+            context: context,
+            builder:(_){
+              return AlertDialog(
+                title: Text(notification.title!),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(notification.body!)
+                    ],
+                  ),
+                ),
+
+              );
+            });
+      }
+    });
+
+  }
+
+  void showNotification(){
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    flutterLocalNotificationsPlugin.show(
+        0,
+        'Nuevo Postulante!!',
+        'Un nuevo postulante ha aplicado ha tu oferta de empleo',
+        NotificationDetails(
+            android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channel.description,
+                importance: Importance.high,
+                color: Colors.blue,
+                playSound: true,
+                icon: initializationSettingsAndroid.defaultIcon
+
+            )
+        )
+    );
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<MUser?>(context);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -55,7 +139,7 @@ class _FinJobdsState extends State<FinJobds> {
             cardBuilder: (context,index){
               return Card(
                 child: Column(
-                  children: [
+                  children: <Widget>[
                     Container(
                       margin: EdgeInsets.all(10),
                       color: Colors.white,
@@ -88,17 +172,18 @@ class _FinJobdsState extends State<FinJobds> {
               if(orientation == CardSwipeOrientation.LEFT){
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Trabajador Rechazado'),
+                      content: Text('Empleo Rechazado'),
                       duration: Duration(milliseconds: 400),
                     )
                 );
               }else if (orientation == CardSwipeOrientation.RIGHT){
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Trabajador Aceptado'),
+                      content: Text('Empleo Aceptado'),
                       duration: Duration(milliseconds: 400),
                     )
                 );
+                showNotification();
               }
             },
           ),
